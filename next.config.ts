@@ -52,7 +52,16 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
 
   outputFileTracingIncludes: {
-    "/**/*": ["./prisma/dev.db"],
+    "/": ["./prisma/dev.db"],
+    "/login": ["./prisma/dev.db"],
+    "/register": ["./prisma/dev.db"],
+    "/posts": ["./prisma/dev.db"],
+    "/posts/[slug]": ["./prisma/dev.db"],
+    "/dashboard": ["./prisma/dev.db"],
+    "/dashboard/users": ["./prisma/dev.db"],
+    "/dashboard/profile": ["./prisma/dev.db"],
+    "/kontak": ["./prisma/dev.db"],
+    "/privacy-policy": ["./prisma/dev.db"],
   },
 
   // ─── Experimental ───────────────────────────────────────────────────────────
