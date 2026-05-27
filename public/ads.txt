@@ -1,0 +1,7 @@
+# ads.txt - Google AdSense Authorization File
+# Format: <SSP/Exchange Domain>, <Publisher/Seller Account ID>, <Account Type>, <Authority ID>
+#
+# Replace "ca-pub-XXXXXXXXXXXXXXXXX" below with your actual AdSense Publisher ID
+# You can find it at https://adsense.google.com/start → Account → Account Information
+#
+google.com, ca-pub-XXXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
