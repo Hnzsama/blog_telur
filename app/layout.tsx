@@ -19,8 +19,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ||
-      "https://discount-mpegs-live-attempted.trycloudflare.com"
+    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
   ),
   title: {
     default: "Update Harga Telur & Ayam Ras Hari Ini",
@@ -48,9 +47,7 @@ export const metadata: Metadata = {
     title: "Update Harga Telur & Ayam Ras Hari Ini",
     description:
       "Update harga telur ayam ras terbaru hari ini langsung dari peternak di berbagai daerah Indonesia seperti Blitar, Jakarta, Surabaya. Cek tren harga pasar.",
-    url:
-      process.env.NEXT_PUBLIC_SITE_URL ||
-      "https://discount-mpegs-live-attempted.trycloudflare.com",
+    url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
     siteName: "Harga Telur Indonesia",
     locale: "id_ID",
     type: "website",

@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: "/dashboard/",
     },
-    sitemap: "https://discount-mpegs-live-attempted.trycloudflare.com/sitemap.xml",
+    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/sitemap.xml`,
   };
 }

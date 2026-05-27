@@ -44,7 +44,7 @@ export default async function Home() {
     "@type": "WebPage",
     "name": "Update Harga Telur & Ayam Ras Hari Ini",
     "description": "Update harga telur ayam ras terbaru hari ini langsung dari peternak di berbagai daerah Indonesia seperti Blitar, Jakarta, Surabaya. Cek tren harga pasar.",
-    "url": "https://discount-mpegs-live-attempted.trycloudflare.com",
+    "url": process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
     "mainEntity": {
       "@type": "Table",
       "about": "Harga Telur Ayam Ras di Indonesia",
