@@ -51,6 +51,10 @@ const nextConfig: NextConfig = {
   // ─── Power optimizations ────────────────────────────────────────────────────
   poweredByHeader: false,
 
+  outputFileTracingIncludes: {
+    "/**/*": ["./prisma/dev.db"],
+  },
+
   // ─── Experimental ───────────────────────────────────────────────────────────
   experimental: {
     optimizeCss: true,
