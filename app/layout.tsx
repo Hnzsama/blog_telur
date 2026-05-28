@@ -53,11 +53,11 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/og-image.png`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/og-image.webp`,
         width: 1200,
         height: 630,
         alt: "Harga Telur Indonesia — Update Harga Telur Ayam Ras Hari Ini",
-        type: "image/png",
+        type: "image/webp",
       },
     ],
   },
@@ -66,7 +66,7 @@ export const metadata: Metadata = {
     title: "Update Harga Telur & Ayam Ras Hari Ini",
     description:
       "Update harga telur ayam ras terbaru hari ini langsung dari peternak di berbagai daerah Indonesia seperti Blitar, Jakarta, Surabaya.",
-    images: [`${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/og-image.png`],
+    images: [`${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/og-image.webp`],
   },
 };
 
