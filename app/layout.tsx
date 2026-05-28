@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
   ),
   title: {
-    default: "Update Harga Telur & Ayam Ras Hari Ini",
+    default: "Cek Harga Telur Ayam Ras Hari Ini — Update Terkini",
     template: "%s | Harga Telur Indonesia",
   },
   description:
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     shortcut: "/icon.png",
   },
   openGraph: {
-    title: "Update Harga Telur & Ayam Ras Hari Ini",
+    title: "Cek Harga Telur Ayam Ras Hari Ini — Update Terkini",
     description:
       "Update harga telur ayam ras terbaru hari ini langsung dari peternak di berbagai daerah Indonesia seperti Blitar, Jakarta, Surabaya. Cek tren harga pasar.",
     url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Update Harga Telur & Ayam Ras Hari Ini",
+    title: "Cek Harga Telur Ayam Ras Hari Ini — Update Terkini",
     description:
       "Update harga telur ayam ras terbaru hari ini langsung dari peternak di berbagai daerah Indonesia seperti Blitar, Jakarta, Surabaya.",
     images: [`${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/og-image.webp`],
