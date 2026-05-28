@@ -45,17 +45,25 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
       return { title: "Postingan Tidak Ditemukan | Harga Telur Indonesia" };
     }
 
-    const firstImage = post.images && post.images.length > 0 ? post.images[0].url : "/icon.png";
+    // Build absolute OG image URL — WhatsApp/Facebook require full https:// URLs
+    const rawImage = post.images && post.images.length > 0
+      ? post.images[0].url
+      : "/og-image.png"; // fallback to proper 1200x630 OG image, NOT favicon
+    const ogImageUrl = rawImage.startsWith("http")
+      ? rawImage
+      : `${siteUrl}${rawImage}`;
+
+    const description = post.content.substring(0, 155).replace(/\n/g, " ");
 
     return {
       title: `${post.title} | Harga Telur Indonesia`,
-      description: post.content.substring(0, 150),
+      description,
       alternates: {
         canonical: `${siteUrl}/posts/${slug}`,
       },
       openGraph: {
         title: post.title,
-        description: post.content.substring(0, 150),
+        description,
         url: `${siteUrl}/posts/${slug}`,
         siteName: "Harga Telur Indonesia",
         locale: "id_ID",
@@ -64,13 +72,20 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
         modifiedTime: post.updatedAt.toISOString(),
         images: [
           {
-            url: firstImage,
-            width: 800,
-            height: 600,
+            url: ogImageUrl,
+            width: 1200,
+            height: 630,
             alt: post.title,
+            type: "image/webp",
           }
         ]
-      }
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: post.title,
+        description,
+        images: [ogImageUrl],
+      },
     };
   } catch (error) {
     return { title: "Detail Postingan | Harga Telur Indonesia" };
