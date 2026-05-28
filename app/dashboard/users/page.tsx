@@ -17,11 +17,13 @@ export default async function UsersPage() {
   // 1. Authenticate user session
   const user = await getSessionUser();
   if (!user) {
+    await new Promise((resolve) => setTimeout(resolve, 0));
     redirect("/login");
   }
 
   // 2. Authorize ADMIN role only
   if (user.role !== "ADMIN") {
+    await new Promise((resolve) => setTimeout(resolve, 0));
     redirect("/dashboard");
   }
 

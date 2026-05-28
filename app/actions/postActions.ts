@@ -18,7 +18,7 @@ function generateSlug(title: string): string {
 }
 
 // Action to create a new blog post
-export async function createPostAction(prevState: any, formData: FormData) {
+export async function createPostAction(formData: FormData) {
   const user = await getSessionUser();
   if (!user) {
     return { success: false, error: "Anda harus login untuk memposting." };
@@ -28,6 +28,9 @@ export async function createPostAction(prevState: any, formData: FormData) {
   const content = formData.get("content") as string;
   const priceRegion = (formData.get("priceRegion") as string) || null;
   const eggPriceVal = formData.get("eggPrice") as string;
+  const province = (formData.get("province") as string) || null;
+  const regency = (formData.get("regency") as string) || null;
+  const district = (formData.get("district") as string) || null;
 
   if (!title || !content) {
     return { success: false, error: "Judul dan konten wajib diisi." };
@@ -44,6 +47,9 @@ export async function createPostAction(prevState: any, formData: FormData) {
         content: content.trim(),
         priceRegion: priceRegion ? priceRegion.trim() : null,
         eggPrice,
+        province: province ? province.trim() : null,
+        regency: regency ? regency.trim() : null,
+        district: district ? district.trim() : null,
         authorId: user.id,
         published: true, // Default to true (published)
       },
@@ -65,17 +71,26 @@ export async function createPostAction(prevState: any, formData: FormData) {
 }
 
 // Action to update an existing blog post
-export async function updatePostAction(id: number, prevState: any, formData: FormData) {
+export async function updatePostAction(formData: FormData) {
   const user = await getSessionUser();
   if (!user) {
     return { success: false, error: "Sesi Anda telah berakhir. Silakan login kembali." };
   }
+
+  const idVal = formData.get("id") as string;
+  if (!idVal) {
+    return { success: false, error: "Post ID wajib disertakan." };
+  }
+  const id = parseInt(idVal, 10);
 
   const title = formData.get("title") as string;
   const content = formData.get("content") as string;
   const priceRegion = (formData.get("priceRegion") as string) || null;
   const eggPriceVal = formData.get("eggPrice") as string;
   const publishedVal = formData.get("published") as string;
+  const province = (formData.get("province") as string) || null;
+  const regency = (formData.get("regency") as string) || null;
+  const district = (formData.get("district") as string) || null;
 
   if (!title || !content) {
     return { success: false, error: "Judul dan konten wajib diisi." };
@@ -102,6 +117,9 @@ export async function updatePostAction(id: number, prevState: any, formData: For
         content: content.trim(),
         priceRegion: priceRegion ? priceRegion.trim() : null,
         eggPrice,
+        province: province ? province.trim() : null,
+        regency: regency ? regency.trim() : null,
+        district: district ? district.trim() : null,
         published,
       },
     });
@@ -206,5 +224,60 @@ export async function deletePostImageAction(imageId: number) {
   } catch (error) {
     console.error("Delete image error:", error);
     return { success: false, error: "Gagal menghapus gambar." };
+  }
+}
+
+// Action to dynamically query regional prices based on Province, Regency, and optional District selection
+export async function getRegionalPriceAction(province?: string, regency?: string, district?: string) {
+  try {
+    const whereClause: any = {
+      published: true,
+      eggPrice: { not: null }
+    };
+
+    if (district) {
+      whereClause.district = district;
+    } else if (regency) {
+      whereClause.regency = { contains: regency };
+    } else if (province) {
+      whereClause.province = province;
+    }
+
+    const reports = await prisma.post.findMany({
+      where: whereClause,
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      include: {
+        author: {
+          select: { name: true }
+        }
+      }
+    });
+
+    if (reports.length === 0) {
+      return { success: true, reports: [], averagePrice: 0 };
+    }
+
+    // Calculate average price
+    const averagePrice = Math.round(reports.reduce((sum, r) => sum + (r.eggPrice || 0), 0) / reports.length);
+
+    return {
+      success: true,
+      averagePrice,
+      reports: reports.map(r => ({
+        id: r.id,
+        price: r.eggPrice,
+        region: r.priceRegion,
+        author: r.author.name,
+        date: r.createdAt.toLocaleDateString("id-ID", {
+          day: "numeric",
+          month: "short",
+          year: "numeric"
+        })
+      }))
+    };
+  } catch (err) {
+    console.error("Failed to query regional prices:", err);
+    return { success: false, error: "Gagal memuat data harga regional." };
   }
 }

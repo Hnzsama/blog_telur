@@ -31,7 +31,7 @@ export function AdBanner({
 
   // Dimensions styling class based on type
   const dims = {
-    horizontal: "min-h-[100px] w-full my-6",
+    horizontal: "min-h-[140px] sm:min-h-[100px] w-full my-6",
     vertical: "min-h-[500px] w-full max-w-[300px] my-4",
     square: "min-h-[250px] w-full max-w-[336px] my-4",
     card: "h-full min-h-[380px] w-full"
@@ -40,7 +40,7 @@ export function AdBanner({
   // Card container classes matching site cards
   const containerClasses = type === "card"
     ? "border border-zinc-200/85 dark:border-zinc-800/85 bg-white dark:bg-zinc-900 hover:shadow-lg hover:scale-[1.01] transition-all duration-300 rounded-2xl text-left"
-    : "border border-dashed border-zinc-200/80 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/30 rounded-2xl py-5 px-6 text-center";
+    : "border border-dashed border-zinc-200/80 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/30 rounded-2xl py-3 px-4 sm:py-5 sm:px-6 text-center";
 
   return (
     <div className={`adsbygoogle ad-banner ad-container relative flex flex-col items-center justify-center overflow-hidden mx-auto ${containerClasses} ${dims} ${className}`}>
@@ -97,19 +97,19 @@ export function AdBanner({
           </div>
         </div>
       ) : (
-        <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center z-0 bg-gradient-to-br from-amber-500/5 to-zinc-50 dark:from-amber-500/5 dark:to-zinc-950 pointer-events-none">
-          <span className="text-[9px] uppercase font-bold text-zinc-400 dark:text-zinc-600 tracking-widest mb-1.5 block">
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-3 sm:p-4 text-center z-0 bg-gradient-to-br from-amber-500/5 to-zinc-50 dark:from-amber-500/5 dark:to-zinc-950 pointer-events-none">
+          <span className="text-[8px] sm:text-[9px] uppercase font-bold text-zinc-400 dark:text-zinc-600 tracking-widest mb-1 sm:mb-1.5 block">
             Sponsor / Iklan Mitra
           </span>
-          <div className="space-y-1">
-            <p className="text-sm font-extrabold text-amber-600 dark:text-amber-400">
+          <div className="space-y-0.5 sm:space-y-1">
+            <p className="text-xs sm:text-sm font-extrabold text-amber-600 dark:text-amber-400">
               {type === "vertical" 
                 ? "Kandang Baterai Galvanis" 
                 : type === "square" 
                 ? "Konsentrat Pakan Layer Super" 
                 : "Suplemen Organik Peningkat Cangkang Telur"}
             </p>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-normal max-w-xs">
+            <p className="text-[10px] sm:text-xs text-zinc-500 dark:text-zinc-400 leading-normal max-w-[280px] sm:max-w-xs line-clamp-2 sm:line-clamp-none">
               {type === "vertical" 
                 ? "Konstruksi besi anti-karat untuk efisiensi produksi maksimal."
                 : type === "square"
@@ -117,7 +117,7 @@ export function AdBanner({
                 : "Formula khusus untuk ketebalan cangkang telur dan menjaga kesehatan ayam harian."}
             </p>
           </div>
-          <span className="mt-3.5 text-[10px] font-bold text-zinc-400 border border-zinc-200 dark:border-zinc-800 rounded-full px-3.5 py-0.5 bg-white dark:bg-zinc-900 shadow-xs">
+          <span className="mt-2 sm:mt-3.5 text-[9px] sm:text-[10px] font-bold text-zinc-400 border border-zinc-200 dark:border-zinc-800 rounded-full px-3 py-0.5 sm:px-3.5 bg-white dark:bg-zinc-900 shadow-xs">
             Cek Brosur Iklan &raquo;
           </span>
         </div>

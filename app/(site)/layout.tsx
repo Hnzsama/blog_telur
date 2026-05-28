@@ -4,6 +4,7 @@ import Image from "next/image";
 import { getSessionUser } from "@/lib/auth";
 import { logoutAction } from "@/app/actions/authActions";
 import Script from "next/script";
+import { MobileMenu } from "@/components/MobileMenu";
 
 export default async function SiteLayout({
   children,
@@ -41,7 +42,7 @@ export default async function SiteLayout({
                   priority
                 />
               </div>
-              <span className="text-xl font-black tracking-tight bg-gradient-to-r from-amber-600 to-amber-500 bg-clip-text text-transparent">
+              <span className="text-lg sm:text-xl font-black tracking-tight bg-gradient-to-r from-amber-600 to-amber-500 bg-clip-text text-transparent">
                 Harga Telur Indonesia
               </span>
             </Link>
@@ -54,8 +55,8 @@ export default async function SiteLayout({
             </nav>
           </div>
 
-          {/* Auth actions */}
-          <div className="flex items-center gap-4">
+          {/* Desktop Auth actions */}
+          <div className="hidden md:flex items-center gap-4">
             {user ? (
               <>
                 <Link
@@ -82,6 +83,9 @@ export default async function SiteLayout({
               </Link>
             )}
           </div>
+
+          {/* Mobile Menu Toggle Button */}
+          <MobileMenu isLoggedIn={!!user} logoutAction={logoutAction} />
         </div>
       </header>
 

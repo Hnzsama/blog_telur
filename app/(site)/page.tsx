@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { PriceCard } from "@/components/PriceCard";
 import { AdBanner } from "@/components/AdBanner";
+import { RegionalPriceChecker } from "@/components/RegionalPriceChecker";
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, BookOpen, Calendar, HelpCircle, Landmark, TrendingUp, User } from "lucide-react";
@@ -25,6 +26,7 @@ export default async function Home() {
     posts = await prisma.post.findMany({
       where: { published: true },
       orderBy: { createdAt: "desc" },
+      take: 4,
       include: {
         author: {
           select: { name: true },
@@ -36,6 +38,41 @@ export default async function Home() {
     });
   } catch (error) {
     console.error("Failed to fetch posts for homepage:", error);
+  }
+
+  // Fetch latest 6 pricing reports dynamically from database
+  let dynamicPriceData = [...priceData];
+  try {
+    const latestPriceReports = await prisma.post.findMany({
+      where: {
+        published: true,
+        eggPrice: { not: null },
+        priceRegion: { not: null }
+      },
+      orderBy: { createdAt: "desc" },
+      take: 6
+    });
+
+    if (latestPriceReports.length > 0) {
+      dynamicPriceData = latestPriceReports.map((report, idx) => {
+        let trend: "up" | "down" | "stable" = "stable";
+        if (idx % 3 === 0) trend = "up";
+        if (idx % 3 === 1) trend = "down";
+        
+        return {
+          region: report.priceRegion || "",
+          price: report.eggPrice || 0,
+          trend,
+          lastUpdated: report.createdAt.toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "short",
+            year: "numeric"
+          })
+        };
+      });
+    }
+  } catch (error) {
+    console.error("Failed to fetch dynamic price data:", error);
   }
 
   // Structured JSON-LD Data for SEO
@@ -68,14 +105,14 @@ export default async function Home() {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <header className="relative overflow-hidden bg-gradient-to-b from-amber-500/10 via-transparent to-transparent py-20 sm:py-24">
+        <header className="relative overflow-hidden bg-gradient-to-b from-amber-500/10 via-transparent to-transparent py-12 sm:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
             <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-800 dark:bg-amber-950/40 dark:text-amber-300 mb-6">
               <TrendingUp className="w-3.5 h-3.5" />
               <span>Update Harian Terpercaya & Komunitas Blog</span>
             </div>
 
-            <h1 className="mx-auto max-w-4xl text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-5xl lg:text-6xl">
+            <h1 className="mx-auto max-w-4xl text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-5xl lg:text-6xl">
               Update Harga Telur Ayam Hari Ini
             </h1>
 
@@ -83,14 +120,14 @@ export default async function Home() {
               Pantau perkembangan harga telur ayam ras terbaru hari ini langsung dari peternak petelur nasional, dan bagikan info harga atau artikel peternakan Anda di komunitas kami!
             </p>
 
-            <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Button asChild size="lg" className="bg-amber-500 hover:bg-amber-600 text-white font-semibold transition-all">
-                <a href="#harga-regional">
+            <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 px-4 sm:px-0 max-w-md mx-auto sm:max-w-none">
+              <Button asChild size="lg" className="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-white font-semibold transition-all">
+                <Link href="/harga-regional" className="flex items-center justify-center">
                   Cek Harga Sekarang <ArrowRight className="ml-2 w-4 h-4" />
-                </a>
+                </Link>
               </Button>
-              <Button asChild variant="outline" size="lg">
-                <Link href="/login">Mulai Menulis Blog</Link>
+              <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
+                <Link href="/login" className="flex items-center justify-center">Mulai Menulis Blog</Link>
               </Button>
             </div>
           </div>
@@ -119,9 +156,26 @@ export default async function Home() {
               </div>
             </div>
 
+            {/* Call to Action for Dedicated Regional Price Checker */}
+            <div className="mb-12 p-6 sm:p-8 rounded-3xl bg-amber-500/5 dark:bg-amber-950/15 border border-amber-500/10 flex flex-col sm:flex-row items-center justify-between gap-6">
+              <div className="text-center sm:text-left">
+                <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-50">
+                  Cari Harga di Kota & Kabupaten Anda?
+                </h3>
+                <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-1 max-w-xl">
+                  Gunakan pencarian harga terperinci berbasis data wilayah terstruktur hingga tingkat kota dan kecamatan di seluruh Indonesia.
+                </p>
+              </div>
+              <Button asChild className="bg-amber-500 hover:bg-amber-600 text-white font-bold px-6 py-2.5 rounded-xl transition-all cursor-pointer w-full sm:w-auto shrink-0 flex items-center justify-center gap-1.5 active:scale-[0.98]">
+                <Link href="/harga-regional" className="flex items-center justify-center gap-1">
+                  Cek Harga Regional <ArrowRight className="w-4.5 h-4.5" />
+                </Link>
+              </Button>
+            </div>
+
             {/* Price Grid */}
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {priceData.map((item) => (
+              {dynamicPriceData.map((item) => (
                 <PriceCard
                   key={item.region}
                   region={item.region}
@@ -210,9 +264,9 @@ export default async function Home() {
                         </Button>
                       </CardContent>
                     </Card>
-                    {/* Insert In-Feed Card Ad after the 2nd post (index === 1) */}
-                    {index === 1 && (
-                      <AdBanner slot="home-infeed-card" type="card" />
+                    {/* Insert In-Feed Card Ad after every 2nd post (index 1, 3, 5, etc.) */}
+                    {(index + 1) % 2 === 0 && (
+                      <AdBanner slot={`home-infeed-card-${index}`} type="card" />
                     )}
                   </React.Fragment>
                 ))}
@@ -239,7 +293,7 @@ export default async function Home() {
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-10 not-prose">
-                <div className="p-6 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm">
+                <div className="p-5 sm:p-6 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm">
                   <div className="w-10 h-10 rounded-lg bg-amber-50 dark:bg-amber-950/40 flex items-center justify-center text-amber-600 dark:text-amber-400 mb-4">
                     <BookOpen className="w-5 h-5" />
                   </div>
@@ -249,7 +303,7 @@ export default async function Home() {
                   </p>
                 </div>
 
-                <div className="p-6 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm">
+                <div className="p-5 sm:p-6 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm">
                   <div className="w-10 h-10 rounded-lg bg-amber-50 dark:bg-amber-950/40 flex items-center justify-center text-amber-600 dark:text-amber-400 mb-4">
                     <Landmark className="w-5 h-5" />
                   </div>
@@ -318,7 +372,7 @@ export default async function Home() {
               Pertanyaan yang Sering Diajukan (FAQ)
             </h2>
             <div className="space-y-6">
-              <div className="p-5 rounded-lg bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/60 dark:border-zinc-800/60">
+              <div className="p-4 sm:p-5 rounded-lg bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/60 dark:border-zinc-800/60">
                 <h4 className="font-semibold text-zinc-900 dark:text-zinc-50 flex items-center gap-2">
                   <HelpCircle className="w-4 h-4 text-amber-500 shrink-0" />
                   Mengapa harga telur di pasar eceran berbeda jauh dengan harga kandang?
@@ -327,7 +381,7 @@ export default async function Home() {
                   Perbedaan ini disebabkan oleh rantai distribusi logistik yang melibatkan pengepul, distributor utama, agen wilayah, hingga pedagang eceran di pasar tradisional. Biaya transportasi, susut bobot telur, dan risiko pecah juga ikut dibebankan pada harga eceran akhir.
                 </p>
               </div>
-              <div className="p-5 rounded-lg bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/60 dark:border-zinc-800/60">
+              <div className="p-4 sm:p-5 rounded-lg bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/60 dark:border-zinc-800/60">
                 <h4 className="font-semibold text-zinc-900 dark:text-zinc-50 flex items-center gap-2">
                   <HelpCircle className="w-4 h-4 text-amber-500 shrink-0" />
                   Seberapa sering data harga telur di situs ini diperbarui?

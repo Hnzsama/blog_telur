@@ -91,7 +91,10 @@ export const PostScalarFieldEnum = {
   updatedAt: 'updatedAt',
   authorId: 'authorId',
   priceRegion: 'priceRegion',
-  eggPrice: 'eggPrice'
+  eggPrice: 'eggPrice',
+  province: 'province',
+  regency: 'regency',
+  district: 'district'
 } as const
 
 export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]

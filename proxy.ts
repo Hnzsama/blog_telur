@@ -29,13 +29,6 @@ export function proxy(request: NextRequest) {
     }
   }
 
-  // Redirect already-logged-in users away from login/register pages
-  if (pathname.startsWith("/login") || pathname.startsWith("/register")) {
-    if (sessionId) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
-    }
-  }
-
   return NextResponse.next();
 }
 

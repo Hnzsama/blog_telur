@@ -242,7 +242,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
           {/* Large Featured WebP Image */}
           {post.images && post.images.length > 0 && (
-            <div className="mb-12 rounded-[2rem] overflow-hidden border border-zinc-200/60 dark:border-zinc-800/80 aspect-[21/9] min-h-[250px] bg-zinc-100 dark:bg-zinc-900 relative w-full shadow-lg shadow-zinc-200/30 dark:shadow-none group">
+            <div className="mb-12 rounded-2xl sm:rounded-[2rem] overflow-hidden border border-zinc-200/60 dark:border-zinc-800/80 aspect-[16/9] md:aspect-[21/9] min-h-[250px] bg-zinc-100 dark:bg-zinc-900 relative w-full shadow-lg shadow-zinc-200/30 dark:shadow-none group">
               <Image
                 src={post.images[0].url}
                 alt={post.images[0].altText || post.title}
@@ -262,7 +262,7 @@ export default async function PostPage({ params }: PostPageProps) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
 
             {/* Left Column: Article Body (col-span-8) */}
-            <article className="lg:col-span-8 bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-850 rounded-[2rem] p-6 sm:p-10 shadow-xl shadow-zinc-100/30 dark:shadow-none">
+            <article className="lg:col-span-8 bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-850 rounded-2xl sm:rounded-[2rem] p-4 sm:p-8 md:p-10 shadow-xl shadow-zinc-100/30 dark:shadow-none">
 
               <section className="space-y-6 text-lg text-zinc-700 dark:text-zinc-300 leading-relaxed font-normal">
                 {/* Paragraphs with custom Drop-Cap for the very first letter */}
@@ -360,7 +360,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
               {/* Widget 1: Premium Price Report Callout */}
               {post.priceRegion && post.eggPrice ? (
-                <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-amber-500 to-amber-600 dark:from-amber-600 dark:to-amber-700 text-white p-6 shadow-xl shadow-amber-500/10 border border-amber-400/20 group">
+                <div className="relative overflow-hidden rounded-2xl sm:rounded-[2rem] bg-gradient-to-br from-amber-500 to-amber-600 dark:from-amber-600 dark:to-amber-700 text-white p-5 sm:p-6 shadow-xl shadow-amber-500/10 border border-amber-400/20 group">
                   {/* Decorative glowing sphere */}
                   <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-700 pointer-events-none" />
 
@@ -412,7 +412,7 @@ export default async function PostPage({ params }: PostPageProps) {
               )}
 
               {/* Widget 2: Author Bio Card */}
-              <Card className="rounded-[2rem] border border-zinc-200/60 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 shadow-sm">
+              <Card className="rounded-2xl sm:rounded-[2rem] border border-zinc-200/60 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 sm:p-6 shadow-sm">
                 <CardHeader className="p-0 mb-4">
                   <CardTitle className="text-sm font-extrabold text-zinc-900 dark:text-zinc-50 uppercase tracking-wider flex items-center gap-2">
                     <User className="w-4 h-4 text-amber-500" /> Mengenal Penulis
@@ -436,7 +436,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
               {/* Widget 3: Recent Articles (SEO Internal linking) */}
               {recentPosts.length > 0 && (
-                <Card className="rounded-[2rem] border border-zinc-200/60 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 shadow-sm">
+                <Card className="rounded-2xl sm:rounded-[2rem] border border-zinc-200/60 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 sm:p-6 shadow-sm">
                   <CardHeader className="p-0 mb-5">
                     <CardTitle className="text-sm font-extrabold text-zinc-900 dark:text-zinc-50 uppercase tracking-wider flex items-center gap-2">
                       <BookOpen className="w-4 h-4 text-amber-500" /> Artikel Terbaru

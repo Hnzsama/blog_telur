@@ -49,6 +49,9 @@ export type PostMinAggregateOutputType = {
   authorId: number | null
   priceRegion: string | null
   eggPrice: number | null
+  province: string | null
+  regency: string | null
+  district: string | null
 }
 
 export type PostMaxAggregateOutputType = {
@@ -62,6 +65,9 @@ export type PostMaxAggregateOutputType = {
   authorId: number | null
   priceRegion: string | null
   eggPrice: number | null
+  province: string | null
+  regency: string | null
+  district: string | null
 }
 
 export type PostCountAggregateOutputType = {
@@ -75,6 +81,9 @@ export type PostCountAggregateOutputType = {
   authorId: number
   priceRegion: number
   eggPrice: number
+  province: number
+  regency: number
+  district: number
   _all: number
 }
 
@@ -102,6 +111,9 @@ export type PostMinAggregateInputType = {
   authorId?: true
   priceRegion?: true
   eggPrice?: true
+  province?: true
+  regency?: true
+  district?: true
 }
 
 export type PostMaxAggregateInputType = {
@@ -115,6 +127,9 @@ export type PostMaxAggregateInputType = {
   authorId?: true
   priceRegion?: true
   eggPrice?: true
+  province?: true
+  regency?: true
+  district?: true
 }
 
 export type PostCountAggregateInputType = {
@@ -128,6 +143,9 @@ export type PostCountAggregateInputType = {
   authorId?: true
   priceRegion?: true
   eggPrice?: true
+  province?: true
+  regency?: true
+  district?: true
   _all?: true
 }
 
@@ -228,6 +246,9 @@ export type PostGroupByOutputType = {
   authorId: number
   priceRegion: string | null
   eggPrice: number | null
+  province: string | null
+  regency: string | null
+  district: string | null
   _count: PostCountAggregateOutputType | null
   _avg: PostAvgAggregateOutputType | null
   _sum: PostSumAggregateOutputType | null
@@ -264,6 +285,9 @@ export type PostWhereInput = {
   authorId?: Prisma.IntFilter<"Post"> | number
   priceRegion?: Prisma.StringNullableFilter<"Post"> | string | null
   eggPrice?: Prisma.IntNullableFilter<"Post"> | number | null
+  province?: Prisma.StringNullableFilter<"Post"> | string | null
+  regency?: Prisma.StringNullableFilter<"Post"> | string | null
+  district?: Prisma.StringNullableFilter<"Post"> | string | null
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   images?: Prisma.PostImageListRelationFilter
 }
@@ -279,6 +303,9 @@ export type PostOrderByWithRelationInput = {
   authorId?: Prisma.SortOrder
   priceRegion?: Prisma.SortOrderInput | Prisma.SortOrder
   eggPrice?: Prisma.SortOrderInput | Prisma.SortOrder
+  province?: Prisma.SortOrderInput | Prisma.SortOrder
+  regency?: Prisma.SortOrderInput | Prisma.SortOrder
+  district?: Prisma.SortOrderInput | Prisma.SortOrder
   author?: Prisma.UserOrderByWithRelationInput
   images?: Prisma.PostImageOrderByRelationAggregateInput
 }
@@ -297,6 +324,9 @@ export type PostWhereUniqueInput = Prisma.AtLeast<{
   authorId?: Prisma.IntFilter<"Post"> | number
   priceRegion?: Prisma.StringNullableFilter<"Post"> | string | null
   eggPrice?: Prisma.IntNullableFilter<"Post"> | number | null
+  province?: Prisma.StringNullableFilter<"Post"> | string | null
+  regency?: Prisma.StringNullableFilter<"Post"> | string | null
+  district?: Prisma.StringNullableFilter<"Post"> | string | null
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   images?: Prisma.PostImageListRelationFilter
 }, "id" | "slug">
@@ -312,6 +342,9 @@ export type PostOrderByWithAggregationInput = {
   authorId?: Prisma.SortOrder
   priceRegion?: Prisma.SortOrderInput | Prisma.SortOrder
   eggPrice?: Prisma.SortOrderInput | Prisma.SortOrder
+  province?: Prisma.SortOrderInput | Prisma.SortOrder
+  regency?: Prisma.SortOrderInput | Prisma.SortOrder
+  district?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.PostCountOrderByAggregateInput
   _avg?: Prisma.PostAvgOrderByAggregateInput
   _max?: Prisma.PostMaxOrderByAggregateInput
@@ -333,6 +366,9 @@ export type PostScalarWhereWithAggregatesInput = {
   authorId?: Prisma.IntWithAggregatesFilter<"Post"> | number
   priceRegion?: Prisma.StringNullableWithAggregatesFilter<"Post"> | string | null
   eggPrice?: Prisma.IntNullableWithAggregatesFilter<"Post"> | number | null
+  province?: Prisma.StringNullableWithAggregatesFilter<"Post"> | string | null
+  regency?: Prisma.StringNullableWithAggregatesFilter<"Post"> | string | null
+  district?: Prisma.StringNullableWithAggregatesFilter<"Post"> | string | null
 }
 
 export type PostCreateInput = {
@@ -344,6 +380,9 @@ export type PostCreateInput = {
   updatedAt?: Date | string
   priceRegion?: string | null
   eggPrice?: number | null
+  province?: string | null
+  regency?: string | null
+  district?: string | null
   author: Prisma.UserCreateNestedOneWithoutPostsInput
   images?: Prisma.PostImageCreateNestedManyWithoutPostInput
 }
@@ -359,6 +398,9 @@ export type PostUncheckedCreateInput = {
   authorId: number
   priceRegion?: string | null
   eggPrice?: number | null
+  province?: string | null
+  regency?: string | null
+  district?: string | null
   images?: Prisma.PostImageUncheckedCreateNestedManyWithoutPostInput
 }
 
@@ -371,6 +413,9 @@ export type PostUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   priceRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eggPrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  regency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   images?: Prisma.PostImageUpdateManyWithoutPostNestedInput
 }
@@ -386,6 +431,9 @@ export type PostUncheckedUpdateInput = {
   authorId?: Prisma.IntFieldUpdateOperationsInput | number
   priceRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eggPrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  regency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   images?: Prisma.PostImageUncheckedUpdateManyWithoutPostNestedInput
 }
 
@@ -400,6 +448,9 @@ export type PostCreateManyInput = {
   authorId: number
   priceRegion?: string | null
   eggPrice?: number | null
+  province?: string | null
+  regency?: string | null
+  district?: string | null
 }
 
 export type PostUpdateManyMutationInput = {
@@ -411,6 +462,9 @@ export type PostUpdateManyMutationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   priceRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eggPrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  regency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PostUncheckedUpdateManyInput = {
@@ -424,6 +478,9 @@ export type PostUncheckedUpdateManyInput = {
   authorId?: Prisma.IntFieldUpdateOperationsInput | number
   priceRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eggPrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  regency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PostListRelationFilter = {
@@ -447,6 +504,9 @@ export type PostCountOrderByAggregateInput = {
   authorId?: Prisma.SortOrder
   priceRegion?: Prisma.SortOrder
   eggPrice?: Prisma.SortOrder
+  province?: Prisma.SortOrder
+  regency?: Prisma.SortOrder
+  district?: Prisma.SortOrder
 }
 
 export type PostAvgOrderByAggregateInput = {
@@ -466,6 +526,9 @@ export type PostMaxOrderByAggregateInput = {
   authorId?: Prisma.SortOrder
   priceRegion?: Prisma.SortOrder
   eggPrice?: Prisma.SortOrder
+  province?: Prisma.SortOrder
+  regency?: Prisma.SortOrder
+  district?: Prisma.SortOrder
 }
 
 export type PostMinOrderByAggregateInput = {
@@ -479,6 +542,9 @@ export type PostMinOrderByAggregateInput = {
   authorId?: Prisma.SortOrder
   priceRegion?: Prisma.SortOrder
   eggPrice?: Prisma.SortOrder
+  province?: Prisma.SortOrder
+  regency?: Prisma.SortOrder
+  district?: Prisma.SortOrder
 }
 
 export type PostSumOrderByAggregateInput = {
@@ -577,6 +643,9 @@ export type PostCreateWithoutAuthorInput = {
   updatedAt?: Date | string
   priceRegion?: string | null
   eggPrice?: number | null
+  province?: string | null
+  regency?: string | null
+  district?: string | null
   images?: Prisma.PostImageCreateNestedManyWithoutPostInput
 }
 
@@ -590,6 +659,9 @@ export type PostUncheckedCreateWithoutAuthorInput = {
   updatedAt?: Date | string
   priceRegion?: string | null
   eggPrice?: number | null
+  province?: string | null
+  regency?: string | null
+  district?: string | null
   images?: Prisma.PostImageUncheckedCreateNestedManyWithoutPostInput
 }
 
@@ -632,6 +704,9 @@ export type PostScalarWhereInput = {
   authorId?: Prisma.IntFilter<"Post"> | number
   priceRegion?: Prisma.StringNullableFilter<"Post"> | string | null
   eggPrice?: Prisma.IntNullableFilter<"Post"> | number | null
+  province?: Prisma.StringNullableFilter<"Post"> | string | null
+  regency?: Prisma.StringNullableFilter<"Post"> | string | null
+  district?: Prisma.StringNullableFilter<"Post"> | string | null
 }
 
 export type PostCreateWithoutImagesInput = {
@@ -643,6 +718,9 @@ export type PostCreateWithoutImagesInput = {
   updatedAt?: Date | string
   priceRegion?: string | null
   eggPrice?: number | null
+  province?: string | null
+  regency?: string | null
+  district?: string | null
   author: Prisma.UserCreateNestedOneWithoutPostsInput
 }
 
@@ -657,6 +735,9 @@ export type PostUncheckedCreateWithoutImagesInput = {
   authorId: number
   priceRegion?: string | null
   eggPrice?: number | null
+  province?: string | null
+  regency?: string | null
+  district?: string | null
 }
 
 export type PostCreateOrConnectWithoutImagesInput = {
@@ -684,6 +765,9 @@ export type PostUpdateWithoutImagesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   priceRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eggPrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  regency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
 }
 
@@ -698,6 +782,9 @@ export type PostUncheckedUpdateWithoutImagesInput = {
   authorId?: Prisma.IntFieldUpdateOperationsInput | number
   priceRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eggPrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  regency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PostCreateManyAuthorInput = {
@@ -710,6 +797,9 @@ export type PostCreateManyAuthorInput = {
   updatedAt?: Date | string
   priceRegion?: string | null
   eggPrice?: number | null
+  province?: string | null
+  regency?: string | null
+  district?: string | null
 }
 
 export type PostUpdateWithoutAuthorInput = {
@@ -721,6 +811,9 @@ export type PostUpdateWithoutAuthorInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   priceRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eggPrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  regency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   images?: Prisma.PostImageUpdateManyWithoutPostNestedInput
 }
 
@@ -734,6 +827,9 @@ export type PostUncheckedUpdateWithoutAuthorInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   priceRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eggPrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  regency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   images?: Prisma.PostImageUncheckedUpdateManyWithoutPostNestedInput
 }
 
@@ -747,6 +843,9 @@ export type PostUncheckedUpdateManyWithoutAuthorInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   priceRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eggPrice?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  regency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -791,6 +890,9 @@ export type PostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   authorId?: boolean
   priceRegion?: boolean
   eggPrice?: boolean
+  province?: boolean
+  regency?: boolean
+  district?: boolean
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   images?: boolean | Prisma.Post$imagesArgs<ExtArgs>
   _count?: boolean | Prisma.PostCountOutputTypeDefaultArgs<ExtArgs>
@@ -807,6 +909,9 @@ export type PostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   authorId?: boolean
   priceRegion?: boolean
   eggPrice?: boolean
+  province?: boolean
+  regency?: boolean
+  district?: boolean
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["post"]>
 
@@ -821,6 +926,9 @@ export type PostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   authorId?: boolean
   priceRegion?: boolean
   eggPrice?: boolean
+  province?: boolean
+  regency?: boolean
+  district?: boolean
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["post"]>
 
@@ -835,9 +943,12 @@ export type PostSelectScalar = {
   authorId?: boolean
   priceRegion?: boolean
   eggPrice?: boolean
+  province?: boolean
+  regency?: boolean
+  district?: boolean
 }
 
-export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "content" | "published" | "createdAt" | "updatedAt" | "authorId" | "priceRegion" | "eggPrice", ExtArgs["result"]["post"]>
+export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "content" | "published" | "createdAt" | "updatedAt" | "authorId" | "priceRegion" | "eggPrice" | "province" | "regency" | "district", ExtArgs["result"]["post"]>
 export type PostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   images?: boolean | Prisma.Post$imagesArgs<ExtArgs>
@@ -867,6 +978,9 @@ export type $PostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     authorId: number
     priceRegion: string | null
     eggPrice: number | null
+    province: string | null
+    regency: string | null
+    district: string | null
   }, ExtArgs["result"]["post"]>
   composites: {}
 }
@@ -1302,6 +1416,9 @@ export interface PostFieldRefs {
   readonly authorId: Prisma.FieldRef<"Post", 'Int'>
   readonly priceRegion: Prisma.FieldRef<"Post", 'String'>
   readonly eggPrice: Prisma.FieldRef<"Post", 'Int'>
+  readonly province: Prisma.FieldRef<"Post", 'String'>
+  readonly regency: Prisma.FieldRef<"Post", 'String'>
+  readonly district: Prisma.FieldRef<"Post", 'String'>
 }
     
 

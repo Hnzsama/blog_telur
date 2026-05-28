@@ -10,7 +10,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Egg, Key, Mail, User } from "lucide-react";
+import { Egg, Key, Mail, User, Eye, EyeOff } from "lucide-react";
 import { loginAction, registerAction } from "@/app/actions/authActions";
 
 export function LoginForm({
@@ -25,6 +25,11 @@ export function LoginForm({
   const activeState = mode === "login" ? loginState : registerState;
   const activeAction = mode === "login" ? loginFormAction : registerFormAction;
   const isPending = mode === "login" ? isLoginPending : isRegisterPending;
+
+  const [name, setName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [showPassword, setShowPassword] = React.useState(false);
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -86,6 +91,9 @@ export function LoginForm({
                 type="text"
                 placeholder="Contoh: Budi Santoso"
                 required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                disabled={isPending}
                 className="w-full bg-transparent focus:ring-amber-500"
               />
             </Field>
@@ -102,6 +110,9 @@ export function LoginForm({
               type="email"
               placeholder="budi@example.com"
               required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={isPending}
               className="w-full bg-transparent focus:ring-amber-500"
             />
           </Field>
@@ -111,15 +122,33 @@ export function LoginForm({
               <Key className="w-4 h-4 text-zinc-400" />
               Kata Sandi
             </FieldLabel>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="••••••••"
-              required
-              minLength={8}
-              className="w-full bg-transparent focus:ring-amber-500"
-            />
+            <div className="relative">
+              <Input
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
+                required
+                minLength={8}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={isPending}
+                className="w-full bg-transparent focus:ring-amber-500 pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors flex items-center justify-center p-1 rounded-md focus:outline-none focus:ring-1 focus:ring-amber-500"
+                aria-label={showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
+                disabled={isPending}
+              >
+                {showPassword ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
+              </button>
+            </div>
           </Field>
 
           <Field className="pt-2">

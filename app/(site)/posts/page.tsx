@@ -20,7 +20,7 @@ interface BlogListPageProps {
 export default async function BlogListPage({ searchParams }: BlogListPageProps) {
   const { page } = await searchParams;
   const currentPage = parseInt(page || "1", 10) || 1;
-  const postsPerPage = 6;
+  const postsPerPage = 10;
   const skip = (currentPage - 1) * postsPerPage;
 
   let posts: any[] = [];
@@ -64,7 +64,7 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
               <BookOpen className="w-3.5 h-3.5" />
               <span>Komunitas Penulis & Peternak</span>
             </div>
-            <h1 className="text-4xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
+            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
               Artikel & Laporan Komunitas
             </h1>
             <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400 max-w-2xl">
@@ -150,9 +150,9 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
                       </Button>
                     </CardContent>
                   </Card>
-                  {/* Insert In-Feed Card Ad after the 2nd post (index === 1) */}
-                  {index === 1 && (
-                    <AdBanner slot="posts-list-infeed-card" type="card" />
+                  {/* Insert In-Feed Card Ad after every 2nd post (index 1, 3, 5, etc.) */}
+                  {(index + 1) % 2 === 0 && (
+                    <AdBanner slot={`posts-list-infeed-card-${index}`} type="card" />
                   )}
                 </React.Fragment>
               ))}

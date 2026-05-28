@@ -32,6 +32,9 @@ model Post {
   author      User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
   priceRegion String?
   eggPrice    Int?
+  province    String?
+  regency     String?
+  district    String?
   images      PostImage[]
 }
 

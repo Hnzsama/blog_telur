@@ -1,14 +1,14 @@
 "use client";
 
 import * as React from "react";
-import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   Plus, Edit, Trash2, Globe, Lock, User, Tag, 
   LogOut, Calendar, BookOpen, AlertCircle, LayoutDashboard
 } from "lucide-react";
-import { createPostAction, updatePostAction, deletePostAction, deletePostImageAction } from "@/app/actions/postActions";
+import { deletePostAction } from "@/app/actions/postActions";
 import { logoutAction } from "@/app/actions/authActions";
 import { toast } from "sonner";
 
@@ -46,10 +46,7 @@ interface DashboardClientProps {
 }
 
 export function DashboardClient({ user, posts }: DashboardClientProps) {
-  const [modalMode, setModalMode] = React.useState<"idle" | "create" | "edit">("idle");
-  const [selectedPost, setSelectedPost] = React.useState<typeof posts[0] | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = React.useState<number | null>(null);
-  const [deleteImageConfirmId, setDeleteImageConfirmId] = React.useState<number | null>(null);
   const [isActionPending, setIsActionPending] = React.useState(false);
 
   // Stats computation
@@ -62,43 +59,6 @@ export function DashboardClient({ user, posts }: DashboardClientProps) {
   const averagePrice = postsWithPrice.length > 0 
     ? Math.round(postsWithPrice.reduce((sum, p) => sum + (p.eggPrice || 0), 0) / postsWithPrice.length)
     : 0;
-
-  // Handlers for dynamic actions
-  const handleCreateSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsActionPending(true);
-    const formData = new FormData(e.currentTarget);
-    
-    const res = await createPostAction(null, formData);
-    setIsActionPending(false);
-    
-    if (res.success) {
-      toast.success("Postingan berhasil diterbitkan!");
-      setModalMode("idle");
-    } else {
-      toast.error(res.error || "Gagal menerbitkan postingan.");
-    }
-  };
-
-  const handleEditSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!selectedPost) return;
-    setIsActionPending(true);
-    const formData = new FormData(e.currentTarget);
-    
-    const res = await updatePostAction(selectedPost.id, null, formData);
-    setIsActionPending(false);
-    
-    if (res.success) {
-      toast.success("Postingan berhasil disimpan!");
-      setModalMode("idle");
-      setSelectedPost(null);
-    } else {
-      toast.error(res.error || "Gagal memperbarui postingan.");
-    }
-  };
-
-
 
   return (
     <div className="flex-1 bg-zinc-50 dark:bg-zinc-950 p-4 sm:p-6 lg:p-8">
@@ -116,10 +76,12 @@ export function DashboardClient({ user, posts }: DashboardClientProps) {
 
         <div className="flex gap-3">
           <Button 
-            onClick={() => setModalMode("create")}
-            className="bg-amber-500 hover:bg-amber-600 text-white font-semibold flex items-center gap-1.5 transition-all"
+            asChild
+            className="bg-amber-500 hover:bg-amber-600 text-white font-semibold flex items-center gap-1.5 transition-all cursor-pointer"
           >
-            <Plus className="w-4 h-4" /> Tulis Postingan
+            <Link href="/dashboard/posts/new">
+              <Plus className="w-4 h-4" /> Tulis Postingan
+            </Link>
           </Button>
           
           <form action={logoutAction} className="sm:hidden">
@@ -189,7 +151,8 @@ export function DashboardClient({ user, posts }: DashboardClientProps) {
           </CardDescription>
         </CardHeader>
         
-        <div className="overflow-x-auto">
+        {/* Desktop View Table */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-sm text-left text-zinc-500 dark:text-zinc-400 border-collapse">
             <thead className="text-xs uppercase bg-zinc-50 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border-b border-zinc-200 dark:border-zinc-800">
               <tr>
@@ -255,21 +218,20 @@ export function DashboardClient({ user, posts }: DashboardClientProps) {
                     <td className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-2">
                         <Button
-                          onClick={() => {
-                            setSelectedPost(post);
-                            setModalMode("edit");
-                          }}
+                          asChild
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 text-zinc-500 hover:text-amber-500 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                          className="h-8 w-8 text-zinc-500 hover:text-amber-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer"
                         >
-                          <Edit className="w-4 h-4" />
+                          <Link href={`/dashboard/posts/${post.id}/edit`}>
+                            <Edit className="w-4 h-4" />
+                          </Link>
                         </Button>
                         <Button
                           onClick={() => setDeleteConfirmId(post.id)}
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 text-zinc-500 hover:text-rose-500 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                          className="h-8 w-8 text-zinc-500 hover:text-rose-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer"
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
@@ -281,181 +243,91 @@ export function DashboardClient({ user, posts }: DashboardClientProps) {
             </tbody>
           </table>
         </div>
-      </Card>
 
-      {/* Editor Modal Overlay */}
-      {modalMode !== "idle" && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/60 backdrop-blur-xs transition-opacity">
-          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 shadow-2xl max-w-lg w-full flex flex-col max-h-[90vh]">
-            <div className="flex items-center justify-between pb-4 mb-4 border-b border-zinc-200 dark:border-zinc-800">
-              <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-amber-500" />
-                {modalMode === "create" ? "Tulis Artikel Baru" : "Edit Artikel"}
-              </h3>
-              <button 
-                onClick={() => {
-                  setModalMode("idle");
-                  setSelectedPost(null);
-                }}
-                className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 font-bold"
-              >
-                ✕
-              </button>
+        {/* Mobile View Card List */}
+        <div className="md:hidden divide-y divide-zinc-200 dark:divide-zinc-800">
+          {posts.length === 0 ? (
+            <div className="px-6 py-12 text-center text-zinc-500 dark:text-zinc-400">
+              <BookOpen className="w-8 h-8 mx-auto text-zinc-300 mb-2" />
+              Belum ada postingan artikel.
             </div>
-
-            <form 
-              onSubmit={modalMode === "create" ? handleCreateSubmit : handleEditSubmit}
-              encType="multipart/form-data"
-              className="space-y-4 overflow-y-auto pr-1 flex-1"
-            >
-              <div className="space-y-1">
-                <label htmlFor="title" className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-                  Judul Artikel <span className="text-rose-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="title"
-                  name="title"
-                  required
-                  defaultValue={modalMode === "edit" ? selectedPost?.title : ""}
-                  className="w-full px-3 py-2 text-sm border border-zinc-300 dark:border-zinc-700 rounded-md bg-transparent focus:outline-none focus:ring-1 focus:ring-amber-500"
-                  placeholder="Contoh: Perkembangan Harga Telur Blitar Mengalami Penurunan"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
+          ) : (
+            posts.map((post) => (
+              <div key={post.id} className="p-4 space-y-3 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-colors">
                 <div className="space-y-1">
-                  <label htmlFor="priceRegion" className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-                    Wilayah Laporan (Opsional)
-                  </label>
-                  <input
-                    type="text"
-                    id="priceRegion"
-                    name="priceRegion"
-                    defaultValue={modalMode === "edit" ? (selectedPost?.priceRegion || "") : ""}
-                    className="w-full px-3 py-2 text-sm border border-zinc-300 dark:border-zinc-700 rounded-md bg-transparent focus:outline-none focus:ring-1 focus:ring-amber-500"
-                    placeholder="Contoh: Blitar"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label htmlFor="eggPrice" className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-                    Harga Telur / kg (Opsional)
-                  </label>
-                  <input
-                    type="number"
-                    id="eggPrice"
-                    name="eggPrice"
-                    defaultValue={modalMode === "edit" ? (selectedPost?.eggPrice || "") : ""}
-                    className="w-full px-3 py-2 text-sm border border-zinc-300 dark:border-zinc-700 rounded-md bg-transparent focus:outline-none focus:ring-1 focus:ring-amber-500"
-                    placeholder="Contoh: 24200"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <label htmlFor="content" className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-                  Isi Artikel <span className="text-rose-500">*</span>
-                </label>
-                <textarea
-                  id="content"
-                  name="content"
-                  required
-                  rows={6}
-                  defaultValue={modalMode === "edit" ? selectedPost?.content : ""}
-                  className="w-full px-3 py-2 text-sm border border-zinc-300 dark:border-zinc-700 rounded-md bg-transparent focus:outline-none focus:ring-1 focus:ring-amber-500 resize-none"
-                  placeholder="Tuliskan ulasan, data lengkap, maupun analisis kondisi pasar..."
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label htmlFor="images" className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-                  Upload Gambar Pendukung (Bisa Pilih Lebih dari Satu)
-                </label>
-                <input
-                  type="file"
-                  id="images"
-                  name="images"
-                  multiple
-                  accept="image/*"
-                  className="w-full px-3 py-2 text-xs border border-zinc-300 dark:border-zinc-700 rounded-md bg-transparent focus:outline-none focus:ring-1 focus:ring-amber-500 cursor-pointer file:mr-3 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-amber-500 file:text-white hover:file:bg-amber-600"
-                />
-              </div>
-
-              {modalMode === "edit" && selectedPost?.images && selectedPost.images.length > 0 && (
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-                    Gambar Terunggah ({selectedPost.images.length})
-                  </label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {selectedPost.images.map((img) => (
-                      <div key={img.id} className="relative group rounded-md overflow-hidden border border-zinc-200 dark:border-zinc-800 aspect-video relative">
-                        <Image 
-                          src={img.url} 
-                          alt={img.altText || "Gambar postingan"} 
-                          fill
-                          sizes="(max-width: 640px) 33vw, 150px"
-                          className="object-cover"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setDeleteImageConfirmId(img.id)}
-                          className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-white text-xs font-semibold"
-                        >
-                          <Trash2 className="w-4 h-4 text-rose-500" />
-                        </button>
-                      </div>
-                    ))}
+                  <div className="font-bold text-zinc-900 dark:text-zinc-50 leading-snug">{post.title}</div>
+                  <div className="text-xs text-zinc-450 dark:text-zinc-500 line-clamp-2">
+                    {post.content}
                   </div>
                 </div>
-              )}
 
-              {modalMode === "edit" && (
-                <div className="space-y-1">
-                  <label htmlFor="published" className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-                    Status Publikasi
-                  </label>
-                  <select
-                    id="published"
-                    name="published"
-                    defaultValue={selectedPost?.published ? "true" : "false"}
-                    className="w-full px-3 py-2 text-sm border border-zinc-300 dark:border-zinc-700 rounded-md bg-transparent dark:bg-zinc-800 focus:outline-none focus:ring-1 focus:ring-amber-500"
-                  >
-                    <option value="true">Publik (Tampilkan di halaman utama)</option>
-                    <option value="false">Draf (Sembunyikan / Simpan sebagai draf)</option>
-                  </select>
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-zinc-500">
+                  <span className="flex items-center gap-1">
+                    <User className="w-3.5 h-3.5 text-zinc-400" />
+                    {post.author.name}
+                  </span>
+                  <span className="text-zinc-300 dark:text-zinc-700">•</span>
+                  <span>
+                    {new Date(post.createdAt).toLocaleDateString("id-ID", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </span>
                 </div>
-              )}
 
-              <div className="flex gap-3 pt-4 border-t border-zinc-200 dark:border-zinc-800 mt-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => {
-                    setModalMode("idle");
-                    setSelectedPost(null);
-                  }}
-                  className="flex-1"
-                >
-                  Batal
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={isActionPending}
-                  className="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-semibold"
-                >
-                  {isActionPending ? (
-                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  ) : modalMode === "create" ? (
-                    "Terbitkan Post"
-                  ) : (
-                    "Simpan Perubahan"
-                  )}
-                </Button>
+                {post.priceRegion && post.eggPrice && (
+                  <div className="bg-amber-500/5 border border-amber-500/10 rounded-xl p-3 flex items-start gap-2.5 text-xs">
+                    <Tag className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                    <div>
+                      <span className="font-bold text-amber-800 dark:text-amber-400">Harga Telur:</span>{" "}
+                      <span className="text-zinc-700 dark:text-zinc-300">{post.priceRegion}</span>
+                      <div className="font-black text-sm text-amber-600 dark:text-amber-400 mt-0.5">
+                        Rp {post.eggPrice.toLocaleString("id-ID")} / kg
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between pt-1">
+                  <div>
+                    {post.published ? (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-400">
+                        <Globe className="w-2.5 h-2.5" /> Publik
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">
+                        <Lock className="w-2.5 h-2.5" /> Draf
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Button
+                      asChild
+                      variant="outline"
+                      size="sm"
+                      className="h-8 px-2.5 text-xs flex items-center gap-1 cursor-pointer"
+                    >
+                      <Link href={`/dashboard/posts/${post.id}/edit`}>
+                        <Edit className="w-3.5 h-3.5 text-zinc-500" /> Edit
+                      </Link>
+                    </Button>
+                    <Button
+                      onClick={() => setDeleteConfirmId(post.id)}
+                      variant="outline"
+                      size="sm"
+                      className="h-8 px-2.5 text-xs flex items-center gap-1 text-rose-600 dark:text-rose-450 hover:bg-rose-50 dark:hover:bg-rose-950/30 hover:text-rose-700 border-rose-200/50 dark:border-rose-900/30 cursor-pointer"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" /> Hapus
+                    </Button>
+                  </div>
+                </div>
               </div>
-            </form>
-          </div>
+            ))
+          )}
         </div>
-      )}
+      </Card>
 
       {/* Delete Post Confirmation Modal */}
       {deleteConfirmId !== null && (
@@ -479,6 +351,7 @@ export function DashboardClient({ user, posts }: DashboardClientProps) {
               <Button
                 onClick={async () => {
                   const id = deleteConfirmId;
+                  if (id === null) return;
                   setDeleteConfirmId(null);
                   setIsActionPending(true);
                   const res = await deletePostAction(id);
@@ -487,53 +360,6 @@ export function DashboardClient({ user, posts }: DashboardClientProps) {
                     toast.success("Postingan berhasil dihapus.");
                   } else {
                     toast.error(res.error || "Gagal menghapus postingan.");
-                  }
-                }}
-                className="flex-1 bg-rose-500 hover:bg-rose-600 text-white font-semibold"
-              >
-                Hapus
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Delete Image Confirmation Modal */}
-      {deleteImageConfirmId !== null && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/60 backdrop-blur-xs">
-          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 shadow-2xl max-w-sm w-full">
-            <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 flex items-center gap-2 mb-2">
-              <AlertCircle className="w-5 h-5 text-rose-500" />
-              Hapus Gambar?
-            </h3>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6">
-              Apakah Anda yakin ingin menghapus gambar ini? Tindakan ini tidak dapat dibatalkan.
-            </p>
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                onClick={() => setDeleteImageConfirmId(null)}
-                className="flex-1"
-              >
-                Batal
-              </Button>
-              <Button
-                onClick={async () => {
-                  const imageId = deleteImageConfirmId;
-                  setDeleteImageConfirmId(null);
-                  setIsActionPending(true);
-                  const res = await deletePostImageAction(imageId);
-                  setIsActionPending(false);
-                  if (res.success) {
-                    toast.success("Gambar berhasil dihapus.");
-                    if (selectedPost) {
-                      setSelectedPost({
-                        ...selectedPost,
-                        images: selectedPost.images?.filter(img => img.id !== imageId) || []
-                      });
-                    }
-                  } else {
-                    toast.error(res.error || "Gagal menghapus gambar.");
                   }
                 }}
                 className="flex-1 bg-rose-500 hover:bg-rose-600 text-white font-semibold"
